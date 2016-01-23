@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import SearchBar from './components/searchbar';
 import YTSearch from 'youtube-api-search';
 import config from '../config';
-import VideoList from './components/videolist'
+import VideoList from './components/videolist';
+import VideoDetail from './components/videodetail';
 
 //create new component that makes html
 
@@ -16,14 +17,18 @@ class App extends Component {
     super(props);
 
     this.state = {
-      videos: []
+      videos: [],
+      selectedVideo: null
     };
 
   YTSearch({
     key: API_KEY,
     term: 'surfboards'
   }, (videos) => {
-    this.setState({ videos });
+    this.setState({ 
+      videos: videos,
+      selectedVideo: videos[0]
+     });
     //this.setState({ videos: videos })
   });
 
@@ -33,7 +38,10 @@ class App extends Component {
     return (
       <div>
         <SearchBar />
-        <VideoList videos={this.state.videos}/>
+        <VideoDetail video={this.state.selectedVideo} />
+        <VideoList 
+          onVideoSelect={selectedVideo => this.setState({selectedVideo}) }
+          videos={this.state.videos}/>
       </div>
     );
   }
